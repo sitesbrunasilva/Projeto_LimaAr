@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head><script>
                 // Limpar estado de login ao carregar arquivo gerado
+                localStorage.removeItem('limaar_admin_logged_in');
+                localStorage.removeItem('limaar_content');
+                localStorage.removeItem('limaar_logo');
+                </script><script>
+                // Limpar estado de login ao carregar arquivo gerado
                 // Isso garante que o arquivo comece sempre com logout
                 localStorage.removeItem('limaar_admin_logged_in');
                 localStorage.removeItem('limaar_content');
@@ -881,7 +886,7 @@
                         <p><strong>Segmento:</strong> Instalação e manutenção de ar condicionado</p>
                         <p><strong>Localização:</strong> Américo Brasiliense/SP</p>
                         <p><strong>Porte:</strong> Pequena empresa</p>
-                        <p><strong>Equipe atual:</strong> 9 pessoas</p>
+                        <p><strong>Equipe atual:</strong> 9 pessoas</p><p><br></p><p>bruna silva</p>
                     </div>
                     
                     <div class="card editable" id="card1Structure" style="outline: none; outline-offset: unset; cursor: auto;">
