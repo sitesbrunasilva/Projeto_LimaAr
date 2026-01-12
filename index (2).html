@@ -1,0 +1,2290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Estruturação - Limaar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Botão de Login Discreto */
+        .login-btn-container {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 1000;
+        }
+        
+        .login-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .login-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .admin-logged-in {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: white;
+        }
+        
+        .admin-logged-in span {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: 10px;
+        }
+        
+        .logout-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logout-btn:hover {
+            background-color: rgba(255, 69, 0, 0.3);
+            border-color: rgba(255, 69, 0, 0.5);
+        }
+        
+        /* Modal de Login */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal h3 {
+            color: #1a3a8f;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #2d5cc2;
+            box-shadow: 0 0 0 2px rgba(45, 92, 194, 0.2);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .modal-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #2d5cc2;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a3a8f;
+        }
+        
+        .btn-secondary {
+            background-color: #f0f4ff;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e6ff;
+        }
+        
+        .error-message {
+            color: #ff4444;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        /* Estilos para modo de edição */
+        .edit-mode-indicator {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1a3a8f;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 999;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+        
+        .editable {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .editable:hover {
+            background-color: rgba(45, 92, 194, 0.05);
+            outline: 1px dashed rgba(45, 92, 194, 0.3);
+            border-radius: 3px;
+        }
+        
+        .edit-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #2d5cc2;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 3px 8px;
+            font-size: 11px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+            display: none; /* Inicialmente escondido */
+        }
+        
+        .editable:hover .edit-btn {
+            opacity: 1;
+        }
+        
+        .edit-modal {
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+        
+        .edit-modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .edit-modal h3 {
+            color: #1a3a8f;
+            margin-bottom: 20px;
+        }
+        
+        .edit-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            line-height: 1.6;
+            resize: vertical;
+        }
+        
+        .edit-textarea:focus {
+            outline: none;
+            border-color: #2d5cc2;
+        }
+        
+        .edit-modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* Cabeçalho principal */
+        .header {
+            background: linear-gradient(to right, #1a3a8f, #2d5cc2);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .logo-placeholder {
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .logo-placeholder img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .logo-text {
+            background: white;
+            color: #1a3a8f;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: none; /* Inicialmente escondido */
+        }
+        
+        .logo-text:hover {
+            background-color: #f0f4ff;
+            transform: translateY(-2px);
+        }
+        
+        .logo-input {
+            display: none;
+        }
+        
+        .default-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #2d5cc2, #1a3a8f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 32px;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .company-info {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            background-color: #f0f4ff;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .nav-btn {
+            padding: 12px 25px;
+            margin: 0 10px;
+            background-color: #2d5cc2;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .nav-btn:hover {
+            background-color: #1a3a8f;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-btn.active {
+            background-color: #1a3a8f;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .content {
+            padding: 40px;
+            min-height: 600px;
+        }
+        
+        .phase-content {
+            display: none;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .phase-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            color: #1a3a8f;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaeaea;
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            color: #2d5cc2;
+            margin: 20px 0 15px;
+            font-size: 1.4rem;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+        
+        .highlight {
+            background-color: #f0f4ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #2d5cc2;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 25px 0;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid #2d5cc2;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h4 {
+            color: #1a3a8f;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 40px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: #2d5cc2;
+        }
+        
+        .timeline-item {
+            display: flex;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .timeline-day {
+            background-color: #2d5cc2;
+            color: white;
+            width: 100px;
+            height: 50px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 2;
+            flex-shrink: 0;
+            margin-right: 30px;
+        }
+        
+        .timeline-content {
+            background-color: #f9faff;
+            padding: 20px;
+            border-radius: 10px;
+            flex-grow: 1;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        th {
+            background-color: #1a3a8f;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9faff;
+        }
+        
+        tr:hover {
+            background-color: #f0f4ff;
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .kpi-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            border-top: 4px solid #2d5cc2;
+            position: relative;
+        }
+        
+        .kpi-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #1a3a8f;
+            margin: 10px 0;
+        }
+        
+        .kpi-desc {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .footer {
+            background-color: #1a3a8f;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            position: relative;
+        }
+        
+        .phase-indicator {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        .phase-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ccc;
+            transition: all 0.3s ease;
+        }
+        
+        .phase-dot.active {
+            background-color: #2d5cc2;
+            transform: scale(1.2);
+        }
+        
+        /* Modal para upload de logo */
+        .logo-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .upload-area {
+            border: 2px dashed #2d5cc2;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            background-color: #f9faff;
+            border-color: #1a3a8f;
+        }
+        
+        .upload-area.dragover {
+            background-color: #e8f0fe;
+            border-color: #1a3a8f;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: #2d5cc2;
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .file-info {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f0f4ff;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .nav-btn {
+                margin-bottom: 10px;
+                flex: 1;
+                min-width: 140px;
+            }
+            
+            .header {
+                padding: 30px 20px 30px 150px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .timeline::before {
+                left: 40px;
+            }
+            
+            .timeline-day {
+                width: 80px;
+                height: 40px;
+                font-size: 0.9rem;
+                margin-right: 20px;
+            }
+            
+            .logo-container {
+                left: 15px;
+                top: 15px;
+            }
+            
+            .logo-placeholder {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .login-btn-container {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .edit-mode-indicator {
+                top: 5px;
+                font-size: 12px;
+                padding: 6px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header {
+                padding: 25px 15px 25px 120px;
+            }
+            
+            .logo-container {
+                left: 10px;
+                top: 10px;
+            }
+            
+            .logo-placeholder {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .logo-text {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .login-btn-container {
+                top: 8px;
+                right: 8px;
+            }
+            
+            .login-btn {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+        }
+        
+        /* Toolbar de edição de texto */
+        .text-editor-toolbar {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid #1a3a8f;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            z-index: 5000;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .text-editor-toolbar.active {
+            display: block;
+        }
+        
+        .toolbar-title {
+            font-weight: bold;
+            color: #1a3a8f;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .toolbar-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .toolbar-btn {
+            padding: 8px 12px;
+            background-color: #2d5cc2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        
+        .toolbar-btn:hover {
+            background-color: #1a3a8f;
+            transform: scale(1.05);
+        }
+        
+        .toolbar-btn.active {
+            background-color: #ff6b6b;
+        }
+        
+        .toolbar-select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .toolbar-input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        
+        .toolbar-close-btn {
+            padding: 8px 12px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        .toolbar-close-btn:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modal de Login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h3>Acesso Administrativo</h3>
+            <div class="form-group">
+                <label for="username">Usuário</label>
+                <input type="text" id="username" placeholder="Digite o usuário">
+            </div>
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" placeholder="Digite a senha">
+            </div>
+            <div id="loginError" class="error-message">Usuário ou senha incorretos!</div>
+            <div class="modal-buttons">
+                <button id="cancelLoginBtn" class="modal-btn btn-secondary">Cancelar</button>
+                <button id="submitLoginBtn" class="modal-btn btn-primary">Entrar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Edição de Texto -->
+    <div id="editModal" class="edit-modal">
+        <div class="edit-modal-content">
+            <h3>Editar Conteúdo</h3>
+            <textarea id="editTextarea" class="edit-textarea" placeholder="Digite o novo conteúdo..."></textarea>
+            <div class="edit-modal-buttons">
+                <button id="cancelEditBtn" class="modal-btn btn-secondary">Cancelar</button>
+                <button id="saveEditBtn" class="modal-btn btn-primary">Salvar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para upload de logo -->
+    <div id="logoModal" class="logo-modal">
+        <div class="modal-content">
+            <h3>Adicionar Logo da Limaar</h3>
+            <div id="uploadArea" class="upload-area">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">Clique para selecionar ou arraste uma imagem</div>
+                <div>Formatos: JPG, PNG, SVG (recomendado: 200x200px)</div>
+                <input type="file" id="fileInput" class="logo-input" accept="image/*">
+                <div id="fileInfo" class="file-info"></div>
+            </div>
+            <div id="previewArea" style="display: none; text-align: center; margin-bottom: 20px;">
+                <div style="font-weight: bold; margin-bottom: 10px;">Pré-visualização:</div>
+                <img id="logoPreview" src="#" alt="Pré-visualização do logo" style="max-width: 150px; max-height: 150px; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+            <div class="modal-buttons">
+                <button id="cancelLogoBtn" class="modal-btn btn-secondary">Cancelar</button>
+                <button id="saveLogoBtn" class="modal-btn btn-primary">Aplicar Logo</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="edit-mode-indicator" id="editModeIndicator">📝 MODO DE EDIÇÃO ATIVO</div>
+    
+    <div class="container">
+        <!-- Botão de Login Discreto -->
+        <div class="login-btn-container" id="loginContainer">
+            <button class="login-btn" id="openLoginBtn">🔐 Login</button>
+        </div>
+        
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo-placeholder" id="logoDisplay">
+                    <!-- Logo será exibido aqui -->
+                    <div class="default-logo">L</div>
+                </div>
+                <div class="logo-text" id="changeLogoBtn">ALTERAR LOGO</div>
+                <input type="file" id="logoUpload" class="logo-input" accept="image/*">
+            </div>
+            
+            <h1 id="mainTitle" class="editable">PLANO DE ESTRUTURAÇÃO</h1>
+            <div class="subtitle editable" id="mainSubtitle">Otimização organizacional para crescimento sustentável</div>
+            <div class="company-info editable" id="companyInfo">
+                <strong>Limaar Instalações e Manutenção</strong> | Américo Brasiliense/SP
+            </div>
+        </div>
+        
+        <!-- Barra Admin -->
+        <div class="admin-bar" id="adminBar" style="display: none; background-color: #1a3a8f; color: white; padding: 15px; text-align: center;">
+            <button onclick="downloadHTML()" style="background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 10px;">💾 Salvar e Baixar HTML</button>
+            <button onclick="copyHTMLToClipboard()" style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 10px;">📋 Copiar HTML para Área de Transferência</button>
+            <button onclick="toggleFormatter()" id="formatterBtn" style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">🎨 Ativar Editor de Formatação</button>
+            <span style="margin-left: 20px; font-size: 14px;">Clique nos textos para editar - as mudanças serão salvas automaticamente</span>
+        </div>
+        
+        <div class="nav-buttons">
+            <button class="nav-btn active" data-phase="diagnostico">Diagnóstico</button>
+            <button class="nav-btn" data-phase="estrutura">Nova Estrutura</button>
+            <button class="nav-btn" data-phase="padronizacao">Padronização</button>
+            <button class="nav-btn" data-phase="implementacao">Plano de Implementação</button>
+            <button class="nav-btn" data-phase="resultados">Resultados Esperados</button>
+        </div>
+        
+        <div class="content">
+            <!-- Fase 1: Diagnóstico -->
+            <div id="diagnostico" class="phase-content active">
+                <h2 class="editable" id="phase1Title">Diagnóstico da Situação Atual</h2>
+                
+                <div class="highlight editable" id="phase1Highlight">
+                    <p>A Limaar chegou a um ponto de inflexão onde a falta de estruturação organizacional está limitando o crescimento e afetando a eficiência operacional.</p>
+                </div>
+                
+                <div class="grid">
+                    <div class="card editable" id="card1Data">
+                        <h4>📊 Dados da Empresa</h4>
+                        <p><strong>Segmento:</strong> Instalação e manutenção de ar condicionado</p>
+                        <p><strong>Localização:</strong> Américo Brasiliense/SP</p>
+                        <p><strong>Porte:</strong> Pequena empresa</p>
+                        <p><strong>Equipe atual:</strong> ~12 pessoas</p>
+                    </div>
+                    
+                    <div class="card editable" id="card1Structure">
+                        <h4>⚙️ Estrutura Atual</h4>
+                        <p><strong>2 Sócios:</strong> Administrativo + Operacional</p>
+                        <p><strong>Área Administrativa (3):</strong> DP, Captação (loja/telefone), Captação Externa</p>
+                        <p><strong>Área Operacional (7):</strong> Técnicos gerenciados pelo sócio</p>
+                        <p><strong>Produção:</strong> 20-25 serviços/dia</p>
+                    </div>
+                    
+                    <div class="card editable" id="card1Challenges">
+                        <h4>⚠️ Desafios Identificados</h4>
+                        <ul>
+                            <li>Falta de padronização nas atividades</li>
+                            <li>Qualidade inconsistente dos serviços</li>
+                            <li>Controle insuficiente de recursos</li>
+                            <li>Margens de lucro comprometidas</li>
+                            <li>Gestão operacional sobrecarregada</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3 class="editable" id="phase1Objectives">Objetivos da Reestruturação</h3>
+                <div class="grid">
+                    <div class="card editable" id="card1Efficiency">
+                        <h4>🎯 Melhorar Eficiência</h4>
+                        <p>Otimizar processos para aumentar produtividade com os mesmos recursos</p>
+                    </div>
+                    
+                    <div class="card editable" id="card1Quality">
+                        <h4>📈 Padronizar Qualidade</h4>
+                        <p>Criar processos replicáveis que garantam excelência em todos os serviços</p>
+                    </div>
+                    
+                    <div class="card editable" id="card1Margins">
+                        <h4>💰 Aumentar Margens</h4>
+                        <p>Reduzir desperdícios e otimizar custos operacionais</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Fase 2: Nova Estrutura -->
+            <div id="estrutura" class="phase-content">
+                <h2 class="editable" id="phase2Title">Nova Estrutura Organizacional</h2>
+                
+                <div class="highlight editable" id="phase2Highlight">
+                    <p>Reorganização que otimiza os recursos humanos existentes, cria especialização e reduz custos operacionais.</p>
+                </div>
+                
+                <h3 class="editable" id="phase2Structure">Estrutura Proposta</h3>
+                
+                <div class="editable" id="structureChart" style="background-color: #f9faff; padding: 25px; border-radius: 10px; margin: 25px 0; font-family: monospace; line-height: 1.8;">
+                    <div style="text-align: center; font-weight: bold; color: #1a3a8f; margin-bottom: 15px;">LIMAAR - ESTRUTURA OTIMIZADA</div>
+                    <div style="margin-left: 20px;">
+                        <div>├── <strong>Diretoria (2 sócios)</strong></div>
+                        <div style="margin-left: 20px;">
+                            <div>├── Sócio Administrativo (CEO)</div>
+                            <div>└── Sócio Operacional (COO)</div>
+                        </div>
+                        <div>├── <strong>Área Administrativa (3 pessoas)</strong></div>
+                        <div style="margin-left: 20px;">
+                            <div>├── Gestor Administrativo (multifunções)</div>
+                            <div>└── Comercial Externo (captação)</div>
+                        </div>
+                        <div>└── <strong>Área Operacional (8 pessoas)</strong></div>
+                        <div style="margin-left: 20px;">
+                            <div>├── Supervisor Operacional (COO)</div>
+                            <div>├── Líder Técnico Sênior (promovido)</div>
+                            <div>├── Equipes Técnicas (6 técnicos)</div>
+                            <div>└── Auxiliar de Operações (nova posição)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="editable" id="phase2Functions">Redistribuição de Funções</h3>
+                
+                <div class="table-container">
+                    <div class="editable" id="functionsTable">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Função Atual</th>
+                                    <th>Nova Função</th>
+                                    <th>Principais Mudanças</th>
+                                    <th>Benefício Esperado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Depto. Pessoal (1)</td>
+                                    <td>Gestor Admin. (multifunção)</td>
+                                    <td>Assume RH + Compras + Financeiro</td>
+                                    <td>Redução de dispersão, foco estratégico</td>
+                                </tr>
+                                <tr>
+                                    <td>Atendimento/Captação (1)</td>
+                                    <td>Foco em Pós-Vendas</td>
+                                    <td>Mantém atendimento + fidelização</td>
+                                    <td>Aumento de receita recorrente</td>
+                                </tr>
+                                <tr>
+                                    <td>7 Técnicos</td>
+                                    <td>6 Técnicos + 1 Líder</td>
+                                    <td>Especialização por tipo de serviço</td>
+                                    <td>Melhoria de 30% na qualidade</td>
+                                </tr>
+                                <tr>
+                                    <td>Sócio Operacional</td>
+                                    <td>+ Auxiliar de Operações</td>
+                                    <td>Foco em gestão, não operação</td>
+                                    <td>Libera 15h/semana para estratégia</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <h3 class="editable" id="phase2Teams">Especialização das Equipes Técnicas</h3>
+                <div class="grid">
+                    <div class="card editable" id="card2Installation">
+                        <h4>🔧 Equipe Instalação (3 técnicos)</h4>
+                        <p><strong>Foco:</strong> Instalações novas e projetos</p>
+                        <p><strong>Vantagem:</strong> Maior expertise, tempo reduzido em 25%</p>
+                        <p><strong>Meta:</strong> 3-4 instalações/dia por técnico</p>
+                    </div>
+                    
+                    <div class="card editable" id="card2Maintenance">
+                        <h4>🔍 Equipe Manutenção (3 técnicos)</h4>
+                        <p><strong>Foco:</strong> Manutenções preventivas e corretivas</p>
+                        <p><strong>Vantagem:</strong> Diagnóstico mais rápido e preciso</p>
+                        <p><strong>Meta:</strong> 5-6 manutenções/dia por técnico</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Fase 3: Padronização -->
+            <div id="padronizacao" class="phase-content">
+                <h2 class="editable" id="phase3Title">Sistema de Padronização e Controle</h2>
+                
+                <div class="highlight editable" id="phase3Highlight">
+                    <p>Implementação de processos padronizados que garantam qualidade consistente e controle efetivo de recursos.</p>
+                </div>
+                
+                <h3 class="editable" id="phase3Pop">Manual de Procedimentos Operacionais Padrão (POP)</h3>
+                <div class="grid">
+                    <div class="card editable" id="card3Checklist">
+                        <h4>📋 Checklist de Instalação</h4>
+                        <p>15 itens obrigatórios por serviço</p>
+                        <p>Assinatura do cliente ao finalizar</p>
+                        <p>Fotos antes/depois no sistema</p>
+                    </div>
+                    
+                    <div class="card editable" id="card3Protocol">
+                        <h4>🛠️ Protocolo de Manutenção</h4>
+                        <p>10 etapas padronizadas</p>
+                        <p>Peças substituídas registradas</p>
+                        <p>Tempo médio controlado: 1,5h</p>
+                    </div>
+                    
+                    <div class="card editable" id="card3Form">
+                        <h4>📄 Formulário de Diagnóstico</h4>
+                        <p>Modelo único para todos técnicos</p>
+                        <p>Orçamento padronizado</p>
+                        <p>Aprovação do cliente obrigatória</p>
+                    </div>
+                </div>
+                
+                <h3 class="editable" id="phase3Systems">Sistema de Gestão (Low-Cost)</h3>
+                <div class="grid">
+                    <div class="card editable" id="card3Google">
+                        <h4>💻 Google Workspace</h4>
+                        <p><strong>Custo:</strong> R$ 28/usuário/mês</p>
+                        <p><strong>Inclui:</strong> Agenda compartilhada, Drive, Formulários</p>
+                        <p><strong>Vantagem:</strong> Acesso remoto, colaboração</p>
+                    </div>
+                    
+                    <div class="card editable" id="card3App">
+                        <h4>📱 App de Campo Gratuito</h4>
+                        <p><strong>Solução:</strong> Typeform + Google Sheets</p>
+                        <p><strong>Função:</strong> Checklists digitais, registro de serviços</p>
+                        <p><strong>Vantagem:</strong> Sem custo de desenvolvimento</p>
+                    </div>
+                    
+                    <div class="card editable" id="card3Whatsapp">
+                        <h4>📞 WhatsApp Business</h4>
+                        <p><strong>Custo:</strong> Gratuito</p>
+                        <p><strong>Função:</strong> Comunicação com clientes, confirmações</p>
+                        <p><strong>Vantagem:</strong> Baixa curva de aprendizado</p>
+                    </div>
+                </div>
+                
+                <h3 class="editable" id="phase3Control">Controle de Recursos</h3>
+                <div class="kpi-grid">
+                    <div class="kpi-card editable" id="kpi1">
+                        <div class="kpi-value">R$ 2.500</div>
+                        <div class="kpi-desc">Investimento por kit técnico padronizado</div>
+                    </div>
+                    
+                    <div class="kpi-card editable" id="kpi2">
+                        <div class="kpi-value">85%</div>
+                        <div class="kpi-desc">Meta de horas produtivas (vs. 65% atual)</div>
+                    </div>
+                    
+                    <div class="kpi-card editable" id="kpi3">
+                        <div class="kpi-value">15%</div>
+                        <div class="kpi-desc">Redução esperada no custo por serviço</div>
+                    </div>
+                    
+                    <div class="kpi-card editable" id="kpi4">
+                        <div class="kpi-value">24h</div>
+                        <div class="kpi-desc">Tempo máximo para faturamento após serviço</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Fase 4: Implementação -->
+            <div id="implementacao" class="phase-content">
+                <h2 class="editable" id="phase4Title">Plano de Implementação (60 Dias)</h2>
+                
+                <div class="highlight editable" id="phase4Highlight">
+                    <p>Implementação faseada em 60 dias com acompanhamento semanal para ajustes e garantia de sucesso.</p>
+                </div>
+                
+                <div class="timeline">
+                    <div class="timeline-item editable" id="timeline1">
+                        <div class="timeline-day">Dias 1-15</div>
+                        <div class="timeline-content">
+                            <h4>FASE 1: Estruturação</h4>
+                            <ul>
+                                <li>Reunião de alinhamento com sócios</li>
+                                <li>Definição dos novos papéis e responsabilidades</li>
+                                <li>Criação dos checklists básicos de operação</li>
+                                <li>Organização física do estoque e ferramentas</li>
+                                <li>Configuração inicial do Google Workspace</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item editable" id="timeline2">
+                        <div class="timeline-day">Dias 16-30</div>
+                        <div class="timeline-content">
+                            <h4>FASE 2: Treinamento</h4>
+                            <ul>
+                                <li>Treinamento dos técnicos nos novos procedimentos</li>
+                                <li>Capacitação do gestor administrativo</li>
+                                <li>Teste do sistema de controle e formulários</li>
+                                <li>Definição dos indicadores de performance (KPIs)</li>
+                                <li>Comunicação da nova estrutura à equipe</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item editable" id="timeline3">
+                        <div class="timeline-day">Dias 31-45</div>
+                        <div class="timeline-content">
+                            <h4>FASE 3: Implementação Piloto</h4>
+                            <ul>
+                                <li>1ª semana: Metade da equipe no novo modelo</li>
+                                <li>Reuniões diárias de ajustes baseadas em feedback</li>
+                                <li>Implementação completa na semana seguinte</li>
+                                <li>Monitoramento intensivo dos primeiros resultados</li>
+                                <li>Ajustes finos nos processos conforme necessidade</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item editable" id="timeline4">
+                        <div class="timeline-day">Dias 46-60</div>
+                        <div class="timeline-content">
+                            <h4>FASE 4: Ajustes e Consolidação</h4>
+                            <ul>
+                                <li>Análise dos primeiros resultados operacionais</li>
+                                <li>Ajustes finais nos processos e checklists</li>
+                                <li>Documentação completa dos procedimentos</li>
+                                <li>Definição do plano de manutenção do sistema</li>
+                                <li>Apresentação dos resultados à equipe</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="editable" id="phase4Responsibles">Responsáveis por Fase</h3>
+                <div class="grid">
+                    <div class="card editable" id="card4Phase12">
+                        <h4>👥 Fase 1 e 2</h4>
+                        <p><strong>Liderança:</strong> Sócio Administrativo</p>
+                        <p><strong>Apoio:</strong> Sócio Operacional</p>
+                        <p><strong>Envolvidos:</strong> Toda equipe</p>
+                    </div>
+                    
+                    <div class="card editable" id="card4Phase34">
+                        <h4>👥 Fase 3 e 4</h4>
+                        <p><strong>Liderança:</strong> Sócio Operacional</p>
+                        <p><strong>Apoio:</strong> Líder Técnico Sênior</p>
+                        <p><strong>Envolvidos:</strong> Equipes técnicas</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Fase 5: Resultados -->
+            <div id="resultados" class="phase-content">
+                <h2 class="editable" id="phase5Title">Resultados Esperados e ROI</h2>
+                
+                <div class="highlight editable" id="phase5Highlight">
+                    <p>Investimento modesto com retorno rápido e impacto significativo na eficiência e lucratividade.</p>
+                </div>
+                
+                <h3 class="editable" id="phase5KPIs">Indicadores de Performance (KPIs)</h3>
+                <div class="table-container">
+                    <div class="editable" id="kpiTable">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>KPI</th>
+                                    <th>Situação Atual</th>
+                                    <th>Meta (90 dias)</th>
+                                    <th>Impacto Esperado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Serviços/dia/técnico</td>
+                                    <td>3,1</td>
+                                    <td>4,0</td>
+                                    <td>+29% de produtividade</td>
+                                </tr>
+                                <tr>
+                                    <td>Tempo médio por serviço</td>
+                                    <td>2,8h</td>
+                                    <td>2,2h</td>
+                                    <td>-21% no tempo</td>
+                                </tr>
+                                <tr>
+                                    <td>Satisfação do cliente</td>
+                                    <td>4,1 (estimado)</td>
+                                    <td>4,5+</td>
+                                    <td>Mais indicações e fidelização</td>
+                                </tr>
+                                <tr>
+                                    <td>Custo por serviço</td>
+                                    <td>100% (base)</td>
+                                    <td>85%</td>
+                                    <td>+15% na margem</td>
+                                </tr>
+                                <tr>
+                                    <td>Reclamações</td>
+                                    <td>5% (estimado)</td>
+                                    <td>≤ 2%</td>
+                                    <td>-60% em retrabalho</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <h3 class="editable" id="phase5Investment">Investimento x Retorno</h3>
+                <div class="grid">
+                    <div class="card editable" id="card5Budget">
+                        <h4>📊 Orçamento do Projeto</h4>
+                        <p><strong>Reorganização (tempo):</strong> 60h dos sócios</p>
+                        <p><strong>Kits técnicos (6x):</strong> R$ 15.000 (uma vez)</p>
+                        <p><strong>Sistemas (anual):</strong> R$ 1.000</p>
+                        <p><strong>Treinamento:</strong> R$ 2.000</p>
+                        <p><strong style="color: #1a3a8f; font-size: 1.2rem;">TOTAL: R$ 18.000</strong></p>
+                    </div>
+                    
+                    <div class="card editable" id="card5Return">
+                        <h4>📈 Retorno Esperado (anual)</h4>
+                        <p><strong>Aumento produtividade:</strong> +R$ 72.000</p>
+                        <p><strong>Redução custos:</strong> +R$ 54.000</p>
+                        <p><strong>Aumento fidelização:</strong> +R$ 36.000</p>
+                        <p><strong>Redução retrabalho:</strong> +R$ 18.000</p>
+                        <p><strong style="color: #1a3a8f; font-size: 1.2rem;">RETORNO TOTAL: R$ 180.000/ano</strong></p>
+                    </div>
+                </div>
+                
+                <div class="highlight editable" id="phase5ROI">
+                    <h4>🎯 ROI (Retorno sobre Investimento)</h4>
+                    <p><strong>Investimento:</strong> R$ 18.000</p>
+                    <p><strong>Retorno Anual:</strong> R$ 180.000</p>
+                    <p><strong>ROI:</strong> 900% no primeiro ano</p>
+                    <p><strong>Payback:</strong> 1,2 meses (aproximadamente 36 dias)</p>
+                </div>
+                
+                <h3 class="editable" id="phase5Risks">Riscos e Mitigações</h3>
+                <div class="grid">
+                    <div class="card editable" id="card5Risk1">
+                        <h4>⚠️ Resistência à Mudança</h4>
+                        <p><strong>Probabilidade:</strong> Alta</p>
+                        <p><strong>Impacto:</strong> Médio</p>
+                        <p><strong>Mitigação:</strong> Comunicação clara, envolvimento da equipe, incentivos</p>
+                    </div>
+                    
+                    <div class="card editable" id="card5Risk2">
+                        <h4>⚠️ Queda Temporária na Produtividade</h4>
+                        <p><strong>Probabilidade:</strong> Média</p>
+                        <p><strong>Impacto:</strong> Baixo</p>
+                        <p><strong>Mitigação:</strong> Implementação faseada, metas realistas</p>
+                    </div>
+                    
+                    <div class="card editable" id="card5Risk3">
+                        <h4>⚠️ Custos Iniciais</h4>
+                        <p><strong>Probabilidade:</strong> Baixa</p>
+                        <p><strong>Impacto:</strong> Baixo</p>
+                        <p><strong>Mitigação:</strong> Uso de ferramentas gratuitas, priorização</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="phase-indicator">
+            <div class="phase-dot active" data-phase="diagnostico"></div>
+            <div class="phase-dot" data-phase="estrutura"></div>
+            <div class="phase-dot" data-phase="padronizacao"></div>
+            <div class="phase-dot" data-phase="implementacao"></div>
+            <div class="phase-dot" data-phase="resultados"></div>
+        </div>
+        
+        <div class="footer">
+            <p class="editable" id="footerText1">Plano de Estruturação - Limaar Instalações e Manutenção | Américo Brasiliense/SP</p>
+            <p class="editable" id="footerText2">Apresentação preparada para reestruturação organizacional | Versão 1.0</p>
+        </div>
+    </div>
+    
+    <script>
+        // Declaração global das variáveis importantes
+        let isAdmin = false;
+        let currentEditElement = null;
+        let enableFormatter = false; // Controla se o editor de formatação está ativo
+        
+        // Função para togglear o editor de formatação
+        function toggleFormatter() {
+            enableFormatter = !enableFormatter;
+            const btn = document.getElementById('formatterBtn');
+            if (btn) {
+                if (enableFormatter) {
+                    btn.style.backgroundColor = '#ff6b6b';
+                    btn.textContent = '🎨 Desativar Editor de Formatação';
+                    alert('✅ Editor de formatação ATIVADO!\n\nAgora clique em qualquer texto para editar com formatação.');
+                } else {
+                    btn.style.backgroundColor = '#6c757d';
+                    btn.textContent = '🎨 Ativar Editor de Formatação';
+                    closeTextEditorToolbar();
+                    alert('❌ Editor de formatação DESATIVADO!');
+                }
+            }
+        }
+        
+        // Função para abrir modal de edição (deve ser global)
+        function openEditModal(elementId) {
+            if (!isAdmin) return;
+            
+            currentEditElement = document.getElementById(elementId);
+            if (!currentEditElement) return;
+            
+            // Extrair apenas o texto, sem o botão de edição
+            let content = '';
+            
+            // Clonar o elemento para não modificar o original
+            const clone = currentEditElement.cloneNode(true);
+            
+            // Remover botão de edição do clone
+            const editButton = clone.querySelector('.edit-btn');
+            if (editButton) {
+                editButton.remove();
+            }
+            
+            // Para elementos específicos, ajustar o que extrair
+            if (clone.tagName === 'H1' || clone.tagName === 'H2' || clone.tagName === 'H3' || clone.tagName === 'H4') {
+                content = clone.textContent;
+            } else if (clone.querySelector('table')) {
+                // Para tabelas, manter a estrutura HTML
+                const table = clone.querySelector('table');
+                content = table.outerHTML;
+            } else if (clone.querySelector('ul')) {
+                // Para listas, manter a estrutura HTML
+                const ul = clone.querySelector('ul');
+                content = ul.outerHTML;
+            } else if (clone.querySelector('.kpi-value')) {
+                // Para KPI cards, extrair o conteúdo completo
+                content = clone.innerHTML;
+            } else {
+                // Para outros elementos, extrair HTML interno
+                content = clone.innerHTML;
+            }
+            
+            const editTextarea = document.getElementById('editTextarea');
+            const editModal = document.getElementById('editModal');
+            
+            if (editTextarea) {
+                editTextarea.value = content;
+            }
+            if (editModal) {
+                editModal.style.display = 'flex';
+            }
+        }
+        
+        // Inicialização quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos de login
+            const loginModal = document.getElementById('loginModal');
+            const openLoginBtn = document.getElementById('openLoginBtn');
+            const cancelLoginBtn = document.getElementById('cancelLoginBtn');
+            const submitLoginBtn = document.getElementById('submitLoginBtn');
+            const loginError = document.getElementById('loginError');
+            const loginContainer = document.getElementById('loginContainer');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            
+            // Elementos de edição
+            const editModal = document.getElementById('editModal');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
+            const saveEditBtn = document.getElementById('saveEditBtn');
+            const editTextarea = document.getElementById('editTextarea');
+            const editModeIndicator = document.getElementById('editModeIndicator');
+            
+            // Elementos de logo
+            const logoModal = document.getElementById('logoModal');
+            const changeLogoBtn = document.getElementById('changeLogoBtn');
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const logoPreview = document.getElementById('logoPreview');
+            const previewArea = document.getElementById('previewArea');
+            const fileInfo = document.getElementById('fileInfo');
+            const cancelLogoBtn = document.getElementById('cancelLogoBtn');
+            const saveLogoBtn = document.getElementById('saveLogoBtn');
+            const logoDisplay = document.getElementById('logoDisplay');
+            
+            let selectedFile = null;
+            
+            // Verificar se já está logado (DEPOIS de declarar as variáveis)
+            checkLoginStatus();
+            
+            // Função para verificar status de login
+            function checkLoginStatus() {
+                const savedLogin = localStorage.getItem('limaar_admin_logged_in');
+                if (savedLogin === 'true') {
+                    isAdmin = true;
+                    enableEditMode();
+                    updateLoginUI();
+                } else {
+                    // Não é admin, esconder botões de edição e alterar logo
+                    hideEditButtons();
+                    hideLogoButton();
+                }
+            }
+            
+            // Atualizar UI de login
+            function updateLoginUI() {
+                if (isAdmin) {
+                    loginContainer.innerHTML = `
+                        <div class="admin-logged-in">
+                            <span>Admin</span>
+                            <button class="logout-btn" id="logoutBtn">Sair</button>
+                        </div>
+                    `;
+                    
+                    // Mostrar botão de alterar logo para admin
+                    if (changeLogoBtn) {
+                        changeLogoBtn.style.display = 'block';
+                    }
+                } else {
+                    loginContainer.innerHTML = `<button class="login-btn" id="openLoginBtn">🔐 Login</button>`;
+                    
+                    // Esconder botão de alterar logo para usuário normal
+                    hideLogoButton();
+                }
+            }
+            
+            // Esconder botão de alterar logo
+            function hideLogoButton() {
+                if (changeLogoBtn) {
+                    changeLogoBtn.style.display = 'none';
+                }
+            }
+            
+            // Esconder botões de edição quando não estiver logado
+            function hideEditButtons() {
+                const editButtons = document.querySelectorAll('.edit-btn');
+                editButtons.forEach(btn => {
+                    if (btn) {
+                        btn.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Ativar modo de edição
+            function enableEditMode() {
+                // Mostrar indicador de modo de edição
+                if (editModeIndicator) {
+                    editModeIndicator.style.display = 'block';
+                }
+                
+                // Mostrar barra admin
+                const adminBar = document.getElementById('adminBar');
+                if (adminBar) {
+                    adminBar.style.display = 'block';
+                }
+                
+                // Ativar contentEditable em todos os elementos .editable
+                const editables = document.querySelectorAll('.editable');
+                editables.forEach(el => {
+                    el.contentEditable = 'true';
+                    el.style.outline = '2px dashed #007bff';
+                    el.style.outlineOffset = '2px';
+                    el.style.cursor = 'text';
+                    // Remover botões de edição antigos (se existirem)
+                    const oldBtn = el.querySelector('.edit-btn');
+                    if (oldBtn) oldBtn.remove();
+                    
+                    // Adicionar evento de clique para abrir toolbar (somente se enableFormatter estiver ativo)
+                    el.addEventListener('click', function(e) {
+                        if (isAdmin && enableFormatter) {
+                            e.stopPropagation();
+                            openTextEditorToolbar(this);
+                        }
+                    });
+                });
+                
+                // Mostrar botão de alterar logo
+                if (changeLogoBtn) {
+                    changeLogoBtn.style.display = 'block';
+                }
+                
+                // Carregar conteúdo salvo
+                loadSavedContent();
+            }
+            
+            // Desativar modo de edição
+            function disableEditMode() {
+                if (editModeIndicator) {
+                    editModeIndicator.style.display = 'none';
+                }
+                const adminBar = document.getElementById('adminBar');
+                if (adminBar) {
+                    adminBar.style.display = 'none';
+                }
+                // Desativar contentEditable
+                const editables = document.querySelectorAll('.editable');
+                editables.forEach(el => {
+                    el.contentEditable = 'false';
+                    el.style.outline = 'none';
+                    el.style.cursor = 'auto';
+                });
+                hideEditButtons();
+                hideLogoButton();
+            }
+            
+            // Mostrar botões de edição
+            function showEditButtons() {
+                const editButtons = document.querySelectorAll('.edit-btn');
+                editButtons.forEach(btn => {
+                    if (btn) {
+                        btn.style.display = 'block';
+                    }
+                });
+            }
+            
+            // Logout
+            function logout() {
+                isAdmin = false;
+                localStorage.removeItem('limaar_admin_logged_in');
+                disableEditMode();
+                updateLoginUI();
+            }
+            
+            // Login - adicionar evento ao botão de login inicial
+            if (openLoginBtn) {
+                openLoginBtn.addEventListener('click', () => {
+                    if (loginModal) {
+                        loginModal.style.display = 'flex';
+                    }
+                });
+            }
+            
+            // Adicionar evento ao botão de login no container (para quando o botão é recriado)
+            loginContainer.addEventListener('click', function(e) {
+                if (e.target && e.target.id === 'openLoginBtn') {
+                    if (loginModal) {
+                        loginModal.style.display = 'flex';
+                    }
+                }
+            });
+
+            // Delegation fallback para login/logout (botões recriados dinamicamente)
+            if (loginContainer) {
+                loginContainer.addEventListener('click', function(e) {
+                    if (e.target && (e.target.closest('.login-btn') || e.target.id === 'openLoginBtn')) {
+                        if (loginModal) loginModal.style.display = 'flex';
+                        return;
+                    }
+                    if (e.target && e.target.closest('.logout-btn')) {
+                        logout();
+                    }
+                });
+            }
+
+            // Delegation fallback: captura cliques na barra de navegação
+            const navContainer = document.querySelector('.nav-buttons');
+            if (navContainer) {
+                navContainer.addEventListener('click', function(e) {
+                    const btn = e.target.closest('.nav-btn');
+                    if (!btn) return;
+                    const targetPhase = btn.getAttribute('data-phase');
+                    navButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    phaseContents.forEach(c => c.classList.toggle('active', c.id === targetPhase));
+                    phaseDots.forEach(d => d.classList.toggle('active', d.getAttribute('data-phase') === targetPhase));
+                });
+            }
+            
+            // Cancelar login
+            if (cancelLoginBtn) {
+                cancelLoginBtn.addEventListener('click', () => {
+                    if (loginModal) {
+                        loginModal.style.display = 'none';
+                    }
+                    if (loginError) {
+                        loginError.style.display = 'none';
+                    }
+                    if (usernameInput) {
+                        usernameInput.value = '';
+                    }
+                    if (passwordInput) {
+                        passwordInput.value = '';
+                    }
+                });
+            }
+            
+            // Submeter login
+            if (submitLoginBtn) {
+                submitLoginBtn.addEventListener('click', () => {
+                    if (!usernameInput || !passwordInput) return;
+                    
+                    const username = usernameInput.value;
+                    const password = passwordInput.value;
+                    
+                    // Credenciais: admin / 011235
+                    if (username === 'admin' && password === '011235') {
+                        isAdmin = true;
+                        localStorage.setItem('limaar_admin_logged_in', 'true');
+                        
+                        if (loginModal) {
+                            loginModal.style.display = 'none';
+                        }
+                        if (loginError) {
+                            loginError.style.display = 'none';
+                        }
+                        
+                        usernameInput.value = '';
+                        passwordInput.value = '';
+                        
+                        enableEditMode();
+                        updateLoginUI();
+                    } else {
+                        if (loginError) {
+                            loginError.style.display = 'block';
+                        }
+                    }
+                });
+            }
+            
+            // Permitir login com Enter
+            if (passwordInput) {
+                passwordInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        if (submitLoginBtn) {
+                            submitLoginBtn.click();
+                        }
+                    }
+                });
+            }
+            
+            // Fechar modal de edição
+            if (cancelEditBtn) {
+                cancelEditBtn.addEventListener('click', () => {
+                    if (editModal) {
+                        editModal.style.display = 'none';
+                    }
+                    currentEditElement = null;
+                    if (editTextarea) {
+                        editTextarea.value = '';
+                    }
+                });
+            }
+            
+            // Salvar edição
+            if (saveEditBtn) {
+                saveEditBtn.addEventListener('click', () => {
+                    if (!currentEditElement || !editTextarea) return;
+                    
+                    const newContent = editTextarea.value;
+                    
+                    // Para elementos de título, usar textContent
+                    if (currentEditElement.tagName === 'H1' || currentEditElement.tagName === 'H2' || 
+                        currentEditElement.tagName === 'H3' || currentEditElement.tagName === 'H4') {
+                        currentEditElement.textContent = newContent;
+                    } else if (currentEditElement.querySelector('table')) {
+                        // Para tabelas, substituir a tabela inteira
+                        const tableContainer = currentEditElement.querySelector('table').parentElement;
+                        tableContainer.innerHTML = newContent;
+                    } else if (currentEditElement.querySelector('ul')) {
+                        // Para listas, substituir a lista
+                        const ulContainer = currentEditElement.querySelector('ul').parentElement;
+                        ulContainer.innerHTML = newContent;
+                    } else {
+                        // Para outros elementos, substituir o conteúdo interno
+                        currentEditElement.innerHTML = newContent;
+                    }
+                    
+                    // Adicionar novamente o botão de edição
+                    if (isAdmin) {
+                        const editBtn = document.createElement('button');
+                        editBtn.className = 'edit-btn';
+                        editBtn.textContent = 'Editar';
+                        editBtn.onclick = function(e) {
+                            e.stopPropagation();
+                            openEditModal(currentEditElement.id);
+                        };
+                        currentEditElement.appendChild(editBtn);
+                    }
+                    
+                    // Salvar no localStorage
+                    saveContentToStorage(currentEditElement.id, newContent);
+                    
+                    if (editModal) {
+                        editModal.style.display = 'none';
+                    }
+                    currentEditElement = null;
+                    if (editTextarea) {
+                        editTextarea.value = '';
+                    }
+                });
+            }
+            
+            // Salvar conteúdo no localStorage
+            function saveContentToStorage(elementId, content) {
+                const savedContent = JSON.parse(localStorage.getItem('limaar_content')) || {};
+                savedContent[elementId] = content;
+                localStorage.setItem('limaar_content', JSON.stringify(savedContent));
+            }
+            
+            // Carregar conteúdo salvo do localStorage
+            function loadSavedContent() {
+                const savedContent = JSON.parse(localStorage.getItem('limaar_content')) || {};
+                
+                Object.keys(savedContent).forEach(elementId => {
+                    const element = document.getElementById(elementId);
+                    if (element) {
+                        const content = savedContent[elementId];
+                        element.innerHTML = content;
+                    }
+                });
+                
+                // Adicionar auto-save ao editar elementos contentEditable
+                const editables = document.querySelectorAll('.editable');
+                editables.forEach(el => {
+                    el.addEventListener('input', function() {
+                        saveContentToStorage(el.id, el.innerHTML);
+                    });
+                    el.addEventListener('blur', function() {
+                        saveContentToStorage(el.id, el.innerHTML);
+                    });
+                });
+            }
+            
+            // Salvar conteúdo no localStorage
+            function saveContentToStorage(elementId, content) {
+                const savedContent = JSON.parse(localStorage.getItem('limaar_content')) || {};
+                savedContent[elementId] = content;
+                localStorage.setItem('limaar_content', JSON.stringify(savedContent));
+            }
+            
+            // Sistema de logo (somente para admin)
+            if (changeLogoBtn) {
+                changeLogoBtn.addEventListener('click', () => {
+                    if (!isAdmin) return;
+                    if (logoModal) {
+                        logoModal.style.display = 'flex';
+                    }
+                });
+            }
+            
+            if (cancelLogoBtn) {
+                cancelLogoBtn.addEventListener('click', () => {
+                    if (logoModal) {
+                        logoModal.style.display = 'none';
+                    }
+                    selectedFile = null;
+                    if (previewArea) {
+                        previewArea.style.display = 'none';
+                    }
+                    if (fileInfo) {
+                        fileInfo.style.display = 'none';
+                    }
+                    if (fileInput) {
+                        fileInput.value = '';
+                    }
+                });
+            }
+            
+            if (uploadArea) {
+                uploadArea.addEventListener('click', () => {
+                    if (fileInput) {
+                        fileInput.click();
+                    }
+                });
+                
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+                
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.classList.remove('dragover');
+                });
+                
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    
+                    if (e.dataTransfer.files.length) {
+                        handleFileSelect(e.dataTransfer.files[0]);
+                    }
+                });
+            }
+            
+            if (fileInput) {
+                fileInput.addEventListener('change', (e) => {
+                    if (e.target.files.length) {
+                        handleFileSelect(e.target.files[0]);
+                    }
+                });
+            }
+            
+            function handleFileSelect(file) {
+                if (!file.type.match('image.*')) {
+                    alert('Por favor, selecione apenas arquivos de imagem (JPG, PNG, SVG)');
+                    return;
+                }
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('A imagem é muito grande. Por favor, selecione uma imagem com menos de 5MB.');
+                    return;
+                }
+                
+                selectedFile = file;
+                
+                if (fileInfo) {
+                    fileInfo.innerHTML = `
+                        <strong>Arquivo:</strong> ${file.name}<br>
+                        <strong>Tamanho:</strong> ${(file.size / 1024).toFixed(2)} KB<br>
+                        <strong>Tipo:</strong> ${file.type}
+                    `;
+                    fileInfo.style.display = 'block';
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (logoPreview) {
+                        logoPreview.src = e.target.result;
+                    }
+                    if (previewArea) {
+                        previewArea.style.display = 'block';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            if (saveLogoBtn) {
+                saveLogoBtn.addEventListener('click', () => {
+                    if (!selectedFile) {
+                        alert('Por favor, selecione uma imagem primeiro.');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        if (logoDisplay) {
+                            logoDisplay.innerHTML = '';
+                            
+                            const logoImg = document.createElement('img');
+                            logoImg.src = e.target.result;
+                            logoImg.alt = 'Logo Limaar';
+                            logoImg.style.width = '100%';
+                            logoImg.style.height = '100%';
+                            logoImg.style.objectFit = 'contain';
+                            
+                            logoDisplay.appendChild(logoImg);
+                        }
+                        
+                        if (logoModal) {
+                            logoModal.style.display = 'none';
+                        }
+                        
+                        localStorage.setItem('limaar_logo', e.target.result);
+                    };
+                    reader.readAsDataURL(selectedFile);
+                });
+            }
+            
+            const savedLogo = localStorage.getItem('limaar_logo');
+            if (savedLogo && logoDisplay) {
+                logoDisplay.innerHTML = '';
+                const logoImg = document.createElement('img');
+                logoImg.src = savedLogo;
+                logoImg.alt = 'Logo Limaar';
+                logoImg.style.width = '100%';
+                logoImg.style.height = '100%';
+                logoImg.style.objectFit = 'contain';
+                logoDisplay.appendChild(logoImg);
+            }
+            
+            // Navegação entre fases
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const phaseContents = document.querySelectorAll('.phase-content');
+            const phaseDots = document.querySelectorAll('.phase-dot');
+            
+            navButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetPhase = this.getAttribute('data-phase');
+                    
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    phaseContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === targetPhase) {
+                            content.classList.add('active');
+                        }
+                    });
+                    
+                    phaseDots.forEach(dot => {
+                        dot.classList.remove('active');
+                        if (dot.getAttribute('data-phase') === targetPhase) {
+                            dot.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            phaseDots.forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const targetPhase = this.getAttribute('data-phase');
+                    
+                    navButtons.forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.getAttribute('data-phase') === targetPhase) {
+                            btn.classList.add('active');
+                        }
+                    });
+                    
+                    phaseContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === targetPhase) {
+                            content.classList.add('active');
+                        }
+                    });
+                    
+                    phaseDots.forEach(d => d.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            document.addEventListener('keydown', (e) => {
+                const phases = ['diagnostico', 'estrutura', 'padronizacao', 'implementacao', 'resultados'];
+                const currentPhaseElement = document.querySelector('.phase-content.active');
+                const currentPhaseId = currentPhaseElement ? currentPhaseElement.id : 'diagnostico';
+                let currentIndex = phases.indexOf(currentPhaseId);
+                
+                if (e.key === 'ArrowRight' && currentIndex < phases.length - 1) {
+                    const nextPhase = phases[currentIndex + 1];
+                    const nextBtn = document.querySelector(`[data-phase="${nextPhase}"]`);
+                    if (nextBtn) nextBtn.click();
+                } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                    const prevPhase = phases[currentIndex - 1];
+                    const prevBtn = document.querySelector(`[data-phase="${prevPhase}"]`);
+                    if (prevBtn) prevBtn.click();
+                }
+            });
+        });
+        
+        // Função global para baixar HTML com todas as edições
+        function downloadHTML() {
+            // Clonar o documento inteiro
+            const clone = document.documentElement.cloneNode(true);
+            
+            // MANTER tudo: modais, CSS, JavaScript, botões admin
+            // SÓ atualizar o conteúdo dos elementos editáveis com as alterações
+            
+            // Atualizar conteúdo dos elementos .editable no clone com o conteúdo atual (editado)
+            const editablesOriginal = document.querySelectorAll('.editable');
+            const editablesClone = clone.querySelectorAll('.editable');
+            
+            editablesClone.forEach((cloneEl, index) => {
+                if (editablesOriginal[index]) {
+                    cloneEl.innerHTML = editablesOriginal[index].innerHTML;
+                }
+            });
+            
+            // Remover APENAS o atributo contenteditable do clone (não queremos que ele inicie editável)
+            const editablesWithContentEditable = clone.querySelectorAll('[contenteditable]');
+            editablesWithContentEditable.forEach(el => {
+                el.removeAttribute('contenteditable');
+                el.style.outline = 'none';
+                el.style.outlineOffset = 'unset';
+                el.style.cursor = 'auto';
+            });
+            
+            // Remover APENAS o indicador de edição visual (barra admin)
+            const adminBar = clone.querySelector('#adminBar');
+            if (adminBar) {
+                adminBar.style.display = 'none'; // Deixar CSS, mas hidden por padrão
+            }
+            
+            // Remover indicador de modo edição
+            const editModeIndicator = clone.querySelector('#editModeIndicator');
+            if (editModeIndicator) {
+                editModeIndicator.style.display = 'none';
+            }
+            
+            // Adicionar script no início do HEAD para limpar estado de login no localStorage
+            const headTag = clone.querySelector('head');
+            if (headTag) {
+                const resetScript = document.createElement('script');
+                resetScript.textContent = `
+                // Limpar estado de login ao carregar arquivo gerado
+                // Isso garante que o arquivo comece sempre com logout
+                localStorage.removeItem('limaar_admin_logged_in');
+                localStorage.removeItem('limaar_content');
+                localStorage.removeItem('limaar_logo');
+                `;
+                headTag.insertBefore(resetScript, headTag.firstChild);
+            }
+            
+            // Gerar HTML completo
+            let html = '<!DOCTYPE html>\n' + clone.outerHTML;
+            
+            // Criar blob e baixar
+            const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'index.html';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+            
+            alert('✅ Arquivo index.html foi gerado com sucesso!\n\nEste arquivo contém:\n- Todas as alterações de texto que você fez\n- Formatações (negrito, itálico, tamanho, cor, fontes)\n- Sistema de login admin completo\n- Todas as funcionalidades originais\n\nO arquivo começa sempre com logout.\nSuba no GitHub para publicar!');
+        }
+        
+        // Função global para copiar HTML para área de transferência
+        function copyHTMLToClipboard() {
+            // Clonar o documento inteiro
+            const clone = document.documentElement.cloneNode(true);
+            
+            // Atualizar conteúdo dos elementos .editable no clone com o conteúdo atual (editado)
+            const editablesOriginal = document.querySelectorAll('.editable');
+            const editablesClone = clone.querySelectorAll('.editable');
+            
+            editablesClone.forEach((cloneEl, index) => {
+                if (editablesOriginal[index]) {
+                    cloneEl.innerHTML = editablesOriginal[index].innerHTML;
+                }
+            });
+            
+            // Remover APENAS o atributo contenteditable do clone
+            const editablesWithContentEditable = clone.querySelectorAll('[contenteditable]');
+            editablesWithContentEditable.forEach(el => {
+                el.removeAttribute('contenteditable');
+                el.style.outline = 'none';
+                el.style.outlineOffset = 'unset';
+                el.style.cursor = 'auto';
+            });
+            
+            // Remover APENAS o indicador de edição visual (barra admin)
+            const adminBar = clone.querySelector('#adminBar');
+            if (adminBar) {
+                adminBar.style.display = 'none';
+            }
+            
+            // Remover indicador de modo edição
+            const editModeIndicator = clone.querySelector('#editModeIndicator');
+            if (editModeIndicator) {
+                editModeIndicator.style.display = 'none';
+            }
+            
+            // Adicionar script no início do HEAD para limpar estado de login
+            const headTag = clone.querySelector('head');
+            if (headTag) {
+                const resetScript = document.createElement('script');
+                resetScript.textContent = `
+                // Limpar estado de login ao carregar arquivo gerado
+                localStorage.removeItem('limaar_admin_logged_in');
+                localStorage.removeItem('limaar_content');
+                localStorage.removeItem('limaar_logo');
+                `;
+                headTag.insertBefore(resetScript, headTag.firstChild);
+            }
+            
+            // Gerar HTML completo
+            let html = '<!DOCTYPE html>\n' + clone.outerHTML;
+            
+            // Copiar para clipboard
+            navigator.clipboard.writeText(html).then(() => {
+                alert('✅ Código HTML foi copiado para a área de transferência!\n\nVocê pode colar em qualquer editor ou repositório.\n\nO arquivo contém:\n- Todas as alterações de texto que você fez\n- Formatações (negrito, itálico, tamanho, cor, fontes)\n- Sistema de login admin completo\n- Todas as funcionalidades originais');
+            }).catch(() => {
+                alert('❌ Erro ao copiar para área de transferência.\n\nTente usar o botão "Salvar e Baixar HTML" em vez disso.');
+            });
+        }
+        
+        // Função para abrir toolbar de formatação
+        function openTextEditorToolbar(element) {
+            currentEditElement = element;
+            const toolbar = document.getElementById('textEditorToolbar');
+            if (toolbar) {
+                toolbar.classList.add('active');
+                // Focar no elemento para receber comandos
+                element.focus();
+            }
+        }
+        
+        // Função para fechar toolbar
+        function closeTextEditorToolbar() {
+            const toolbar = document.getElementById('textEditorToolbar');
+            if (toolbar) {
+                toolbar.classList.remove('active');
+            }
+        }
+        
+        // Funções de formatação
+        // Função para aplicar formatação de texto
+        function applyFormat(command, value = null) {
+            if (currentEditElement) {
+                currentEditElement.focus();
+                document.execCommand(command, false, value);
+                // Auto-save
+                saveContentToStorage(currentEditElement.id, currentEditElement.innerHTML);
+            }
+        }
+        
+        function changeFontSize(size) {
+            if (!currentEditElement || !size) return;
+            currentEditElement.focus();
+            // Mapa de tamanhos: o execCommand usa números de 1 a 7
+            const sizeMap = { '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6' };
+            if (sizeMap[size]) {
+                document.execCommand('fontSize', false, sizeMap[size]);
+                saveContentToStorage(currentEditElement.id, currentEditElement.innerHTML);
+            }
+        }
+        
+        function changeFontFamily(font) {
+            if (!currentEditElement || !font) return;
+            currentEditElement.focus();
+            document.execCommand('fontName', false, font);
+            saveContentToStorage(currentEditElement.id, currentEditElement.innerHTML);
+        }
+        
+        function changeFontColor(color) {
+            if (!currentEditElement || !color) return;
+            currentEditElement.focus();
+            document.execCommand('foreColor', false, color);
+            saveContentToStorage(currentEditElement.id, currentEditElement.innerHTML);
+        }
+    </script>
+    
+    <!-- Toolbar de Edição de Texto -->
+    <div class="text-editor-toolbar" id="textEditorToolbar">
+        <div class="toolbar-title">Formatação de Texto</div>
+        
+        <div class="toolbar-row">
+            <button class="toolbar-btn" onclick="applyFormat('bold')">
+                <strong>N</strong> Negrito
+            </button>
+            <button class="toolbar-btn" onclick="applyFormat('italic')">
+                <em>I</em> Itálico
+            </button>
+            <button class="toolbar-btn" onclick="applyFormat('underline')">
+                <u>U</u> Sublinhado
+            </button>
+        </div>
+        
+        <div class="toolbar-row">
+            <label style="font-size: 12px;">Fonte:</label>
+            <select class="toolbar-select" onchange="changeFontFamily(this.value)">
+                <option value="">Padrão</option>
+                <option value="Arial">Arial</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Trebuchet MS">Trebuchet MS</option>
+                <option value="Verdana">Verdana</option>
+            </select>
+        </div>
+        
+        <div class="toolbar-row">
+            <label style="font-size: 12px;">Tamanho:</label>
+            <select class="toolbar-select" onchange="changeFontSize(this.value)">
+                <option value="">Tamanho</option>
+                <option value="1">Muito Pequeno</option>
+                <option value="2">Pequeno</option>
+                <option value="3">Normal</option>
+                <option value="4">Grande</option>
+                <option value="5">Muito Grande</option>
+                <option value="6">Gigante</option>
+            </select>
+        </div>
+        
+        <div class="toolbar-row">
+            <label style="font-size: 12px;">Cor:</label>
+            <input type="color" class="toolbar-input" onchange="changeFontColor(this.value)" value="#000000">
+        </div>
+        
+        <div class="toolbar-row">
+            <button class="toolbar-btn" onclick="applyFormat('insertUnorderedList')">
+                • Lista
+            </button>
+            <button class="toolbar-btn" onclick="applyFormat('createLink', prompt('Cole a URL:'))">
+                🔗 Link
+            </button>
+        </div>
+        
+        <button class="toolbar-close-btn" onclick="closeTextEditorToolbar()">Fechar Editor</button>
+    </div>
