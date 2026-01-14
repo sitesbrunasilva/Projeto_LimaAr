@@ -952,8 +952,8 @@
         </div>
         
         <div class="nav-buttons">
-            <button class="nav-btn" data-phase="diagnostico">Diagnóstico</button>
-            <button class="nav-btn active" data-phase="estrutura">Nova Estrutura</button>
+            <button class="nav-btn active" data-phase="diagnostico">Diagnóstico</button>
+            <button class="nav-btn" data-phase="estrutura">Nova Estrutura</button>
             <button class="nav-btn" data-phase="padronizacao">Padronização</button>
             <button class="nav-btn" data-phase="implementacao">Plano de Implementação</button>
             <button class="nav-btn" data-phase="resultados">Resultados Esperados</button>
@@ -961,11 +961,11 @@
         
         <div class="content">
             <!-- Fase 1: Diagnóstico -->
-            <div id="diagnostico" class="phase-content">
+            <div id="diagnostico" class="phase-content active">
                 <h2 class="editable" id="phase1Title" style="outline: none; outline-offset: unset; cursor: auto;">Diagnóstico da Situação Atual</h2>
                 
                 <div class="highlight editable" id="phase1Highlight" style="outline: none; outline-offset: unset; cursor: auto;">
-                    <p>A Limaar chegou a um ponto de inflexão, onde a falta de estruturação organizacional está limitando o crescimento e afetando a eficiência operacional.</p>
+                    <p data-pm-slice="1 1 []">A Limaar vive um momento de amadurecimento organizacional, no qual a falta de processos estruturados e rotinas padronizadas impacta diretamente a eficiência operacional. O crescimento do negócio ocorreu de forma mais rápida do que a organização interna, gerando retrabalhos, dependência de pessoas-chave e aumento de riscos operacionais. Esse cenário limita a escalabilidade e compromete a previsibilidade dos resultados. A estruturação organizacional torna-se, portanto, essencial para sustentar o crescimento de forma eficiente e controlada.</p>
                 </div>
                 
                 <div class="grid">
@@ -1017,11 +1017,11 @@
             </div>
             
             <!-- Fase 2: Nova Estrutura -->
-            <div id="estrutura" class="phase-content active">
+            <div id="estrutura" class="phase-content">
                 <h2 class="editable" id="phase2Title" style="outline: none; outline-offset: unset; cursor: auto;">Nova Estrutura Organizacional</h2>
                 
                 <div class="highlight editable" id="phase2Highlight" style="outline: none; outline-offset: unset; cursor: auto;">
-                    <p>Reorganização que otimiza os recursos humanos existentes, cria especialização e reduz custos operacionais.</p>
+                    <p>A implantação dos novos processos representa um passo estratégico para a evolução da Limaar, com foco em eficiência, padronização e controle operacional. As mudanças promoverão maior clareza de papéis, redução de retrabalhos e mitigação de riscos, tornando a operação mais previsível e consistente. As novas rotinas fortalecem a cultura organizacional, apoiam a tomada de decisão e permitem que a empresa escale suas operações com qualidade, segurança e controle.</p>
                 </div>
                 
                 <h3 class="editable" id="phase2Structure" style="outline: none; outline-offset: unset; cursor: auto;">Estrutura Proposta</h3>
@@ -1385,8 +1385,8 @@ Processos padronizados, ajustados e em melhoria contínua.</p><h2>5. BENEFÍCIOS
         </div>
         
         <div class="phase-indicator">
-            <div class="phase-dot" data-phase="diagnostico"></div>
-            <div class="phase-dot active" data-phase="estrutura"></div>
+            <div class="phase-dot active" data-phase="diagnostico"></div>
+            <div class="phase-dot" data-phase="estrutura"></div>
             <div class="phase-dot" data-phase="padronizacao"></div>
             <div class="phase-dot" data-phase="implementacao"></div>
             <div class="phase-dot" data-phase="resultados"></div>
