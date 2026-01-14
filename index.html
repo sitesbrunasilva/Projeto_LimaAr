@@ -4,6 +4,11 @@
                 localStorage.removeItem('limaar_admin_logged_in');
                 localStorage.removeItem('limaar_content');
                 localStorage.removeItem('limaar_logo');
+                </script><script>
+                // Limpar estado de login ao carregar arquivo gerado
+                localStorage.removeItem('limaar_admin_logged_in');
+                localStorage.removeItem('limaar_content');
+                localStorage.removeItem('limaar_logo');
                 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -942,13 +947,13 @@
         <div class="admin-bar" id="adminBar" style="display: none; background-color: rgb(26, 58, 143); color: white; padding: 15px; text-align: center;">
             <button onclick="downloadHTML()" style="background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 10px;">💾 Salvar e Baixar HTML</button>
             <button onclick="copyHTMLToClipboard()" style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 10px;">📋 Copiar HTML para Área de Transferência</button>
-            <button onclick="toggleFormatter()" id="formatterBtn" style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">🎨 Ativar Editor de Formatação</button>
+            <button onclick="toggleFormatter()" id="formatterBtn" style="background-color: rgb(108, 117, 125); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">🎨 Ativar Editor de Formatação</button>
             <span style="margin-left: 20px; font-size: 14px;">Clique nos textos para editar - as mudanças serão salvas automaticamente</span>
         </div>
         
         <div class="nav-buttons">
-            <button class="nav-btn active" data-phase="diagnostico">Diagnóstico</button>
-            <button class="nav-btn" data-phase="estrutura">Nova Estrutura</button>
+            <button class="nav-btn" data-phase="diagnostico">Diagnóstico</button>
+            <button class="nav-btn active" data-phase="estrutura">Nova Estrutura</button>
             <button class="nav-btn" data-phase="padronizacao">Padronização</button>
             <button class="nav-btn" data-phase="implementacao">Plano de Implementação</button>
             <button class="nav-btn" data-phase="resultados">Resultados Esperados</button>
@@ -956,11 +961,11 @@
         
         <div class="content">
             <!-- Fase 1: Diagnóstico -->
-            <div id="diagnostico" class="phase-content active">
+            <div id="diagnostico" class="phase-content">
                 <h2 class="editable" id="phase1Title" style="outline: none; outline-offset: unset; cursor: auto;">Diagnóstico da Situação Atual</h2>
                 
                 <div class="highlight editable" id="phase1Highlight" style="outline: none; outline-offset: unset; cursor: auto;">
-                    <p>A Limaar chegou a um ponto de inflexão onde a falta de estruturação organizacional está limitando o crescimento e afetando a eficiência operacional.</p>
+                    <p>A Limaar chegou a um ponto de inflexão, onde a falta de estruturação organizacional está limitando o crescimento e afetando a eficiência operacional.</p>
                 </div>
                 
                 <div class="grid">
@@ -969,15 +974,15 @@
                         <p><strong>Segmento:</strong> Instalação e manutenção de ar condicionado</p>
                         <p><strong>Localização:</strong> Américo Brasiliense/SP</p>
                         <p><strong>Porte:</strong> Pequena empresa</p>
-                        <p><strong>Equipe atual:</strong> ~12 pessoas</p>
+                        <p><strong>Equipe atual:</strong>&nbsp;9 pessoas</p>
                     </div>
                     
                     <div class="card editable" id="card1Structure" style="outline: none; outline-offset: unset; cursor: auto;">
                         <h4>⚙️ Estrutura Atual</h4>
-                        <p><strong>2 Sócios:</strong> Administrativo + Operacional</p>
-                        <p><strong>Área Administrativa (3):</strong> DP, Captação (loja/telefone), Captação Externa</p>
-                        <p><strong>Área Operacional (7):</strong> Técnicos gerenciados pelo sócio</p>
-                        <p><strong>Produção:</strong> 20-25 serviços/dia</p>
+                        <p><strong>1 Sócio:</strong> Comercial + Operacional</p>
+                        <p><strong>Área Administrativa (4):</strong> DP|RH, Captação (loja/telefone), Captação Externa, Supervisão.</p>
+                        <p><strong>Área Operacional (5):</strong> Técnicos gerenciados pelo Líder Operacional.</p>
+                        <p><strong>Produção:</strong>&nbsp;sem informação</p>
                     </div>
                     
                     <div class="card editable" id="card1Challenges" style="outline: none; outline-offset: unset; cursor: auto;">
@@ -996,23 +1001,23 @@
                 <div class="grid">
                     <div class="card editable" id="card1Efficiency" style="outline: none; outline-offset: unset; cursor: auto;">
                         <h4>🎯 Melhorar Eficiência</h4>
-                        <p>Otimizar processos para aumentar produtividade com os mesmos recursos</p>
+                        <p>Otimizar processos para aumentar produtividade com os mesmos recursos.</p>
                     </div>
                     
                     <div class="card editable" id="card1Quality" style="outline: none; outline-offset: unset; cursor: auto;">
                         <h4>📈 Padronizar Qualidade</h4>
-                        <p>Criar processos replicáveis que garantam excelência em todos os serviços</p>
+                        <p>Criar processos replicáveis que garantam excelência em todos os serviços.</p>
                     </div>
                     
                     <div class="card editable" id="card1Margins" style="outline: none; outline-offset: unset; cursor: auto;">
                         <h4>💰 Aumentar Margens</h4>
-                        <p>Reduzir desperdícios e otimizar custos operacionais</p>
+                        <p>Reduzir desperdícios e otimizar custos operacionais.</p>
                     </div>
                 </div>
             </div>
             
             <!-- Fase 2: Nova Estrutura -->
-            <div id="estrutura" class="phase-content">
+            <div id="estrutura" class="phase-content active">
                 <h2 class="editable" id="phase2Title" style="outline: none; outline-offset: unset; cursor: auto;">Nova Estrutura Organizacional</h2>
                 
                 <div class="highlight editable" id="phase2Highlight" style="outline: none; outline-offset: unset; cursor: auto;">
@@ -1024,22 +1029,19 @@
                 <div class="editable" id="structureChart" style="background-color: rgb(249, 250, 255); padding: 25px; border-radius: 10px; margin: 25px 0px; font-family: monospace; line-height: 1.8; outline: none; outline-offset: unset; cursor: auto;">
                     <div style="text-align: center; font-weight: bold; color: #1a3a8f; margin-bottom: 15px;">LIMAAR - ESTRUTURA OTIMIZADA</div>
                     <div style="margin-left: 20px;">
-                        <div>├── <strong>Diretoria (2 sócios)</strong></div>
+                        <div>├── <strong>Diretoria (1 sócio)</strong></div>
                         <div style="margin-left: 20px;">
-                            <div>├── Sócio Administrativo (CEO)</div>
-                            <div>└── Sócio Operacional (COO)</div>
+                            <div>├── Diretor Executivo (CEO) e Diretor Operacional (COO) - Alexandre</div>
                         </div>
-                        <div>├── <strong>Área Administrativa (3 pessoas)</strong></div>
+                        <div>├── <strong>Área Administrativa (4 pessoas)</strong></div>
                         <div style="margin-left: 20px;">
-                            <div>├── Gestor Administrativo (multifunções)</div>
-                            <div>└── Comercial Externo (captação)</div>
+                            <div>├── Gestor Administrativo (multifunções) - Noeli</div>
+                            <div>└── Comercial (captação balcão) - Bianca</div><div><div>├── Supervisor Operacional - Adrielle</div><div>├── Supervisor Técnico Sênior - Mário</div></div>
                         </div>
-                        <div>└── <strong>Área Operacional (8 pessoas)</strong></div>
+                        <div>└── <strong>&nbsp;Área Operacional (5 pessoas)</strong></div>
                         <div style="margin-left: 20px;">
-                            <div>├── Supervisor Operacional (COO)</div>
-                            <div>├── Líder Técnico Sênior (promovido)</div>
-                            <div>├── Equipes Técnicas (6 técnicos)</div>
-                            <div>└── Auxiliar de Operações (nova posição)</div>
+                            <div>├── Mecânicos de Refrigeração (3 técnicos)</div><div>&nbsp; &nbsp; &nbsp; &nbsp; - Caio, Jeferson, Lucas.</div>
+                            <div>└── Auxiliar de Refrigeração (2 técnicos)</div><div>&nbsp; &nbsp; &nbsp; &nbsp;- Divaldo, Vitor.</div><div><div><br></div></div>
                         </div>
                     </div>
                 </div>
@@ -1071,16 +1073,16 @@
                                     <td>Aumento de receita recorrente</td>
                                 </tr>
                                 <tr>
-                                    <td>7 Técnicos</td>
-                                    <td>6 Técnicos + 1 Líder</td>
+                                    <td>5 Técnicos</td>
+                                    <td>3 Técnicos + 2 Auxiliares</td>
                                     <td>Especialização por tipo de serviço</td>
                                     <td>Melhoria de 30% na qualidade</td>
                                 </tr>
                                 <tr>
                                     <td>Sócio Operacional</td>
-                                    <td>+ Auxiliar de Operações</td>
-                                    <td>Foco em gestão, não operação</td>
-                                    <td>Libera 15h/semana para estratégia</td>
+                                    <td>2 Supervisores de Operações</td>
+                                    <td>Foco em gestão, não operação.</td>
+                                    <td>Tempo livre para planos estratégicos</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1090,27 +1092,31 @@
                 <h3 class="editable" id="phase2Teams" style="outline: none; outline-offset: unset; cursor: auto;">Especialização das Equipes Técnicas</h3>
                 <div class="grid">
                     <div class="card editable" id="card2Installation" style="outline: none; outline-offset: unset; cursor: auto;">
-                        <h4>🔧 Equipe Instalação (3 técnicos)</h4>
-                        <p><strong>Foco:</strong> Instalações novas e projetos</p>
+                        <h4>🔧 Equipe Mecânicos Instalação (3 técnicos)</h4>
+                        <p><strong>Foco:</strong> Instalações novas e manutenção.</p>
                         <p><strong>Vantagem:</strong> Maior expertise, tempo reduzido em 25%</p>
-                        <p><strong>Meta:</strong> 3-4 instalações/dia por técnico</p>
+                        <p><strong>Meta:</strong> 3-4 instalações/dia por técnico</p><h4>🔧 Equipe Manutenção e Preventiva (2 técnicos)</h4><p><strong>Foco:</strong>&nbsp;<span style="font-size: 16.8px;">Manutenções preventivas e corretivas (Bebedouros, Purificadores e ar.)</span></p><p><strong>Vantagem:</strong>&nbsp;Maior expertise, tempo reduzido em 25%</p><p><strong>Meta:</strong>&nbsp;3-4 instalações/dia por técnico</p><p><br></p>
                     </div>
                     
                     <div class="card editable" id="card2Maintenance" style="outline: none; outline-offset: unset; cursor: auto;">
-                        <h4>🔍 Equipe Manutenção (3 técnicos)</h4>
-                        <p><strong>Foco:</strong> Manutenções preventivas e corretivas</p>
-                        <p><strong>Vantagem:</strong> Diagnóstico mais rápido e preciso</p>
-                        <p><strong>Meta:</strong> 5-6 manutenções/dia por técnico</p>
+                        <h4>🔍 Supervisão Operacional (Interno)</h4>
+                        <p><strong>Foco:</strong>&nbsp;Gestão de rota, Retrabalhos, Controle de materiais.</p>
+                        <p><strong>Vantagem:</strong> Gestão e acompanhamento de serviços.</p>
+                        <p><strong>Meta:</strong>&nbsp;Indicadores acima de 80% em qualidade.</p><p><br></p><h4>🔍 Supervisão Operacional (Campo)</h4><p><strong>Foco:</strong>&nbsp;Aplicação de treinamentos, Fiscalizações e Produtividade.</p><p><strong>Vantagem:</strong>&nbsp;Diagnóstico mais rápido e preciso, atuação imediata.</p><p><strong>Meta:</strong>&nbsp;Indicadores acima de 80% em qualidade.</p>
                     </div>
                 </div>
             </div>
             
             <!-- Fase 3: Padronização -->
             <div id="padronizacao" class="phase-content">
-                <h2 class="editable" id="phase3Title" style="outline: none; outline-offset: unset; cursor: auto;">Sistema de Padronização e Controle</h2>
+                <h2 class="editable" id="phase3Title" style="outline: none; outline-offset: unset; cursor: auto;">PDCA&nbsp;</h2>
                 
                 <div class="highlight editable" id="phase3Highlight" style="outline: none; outline-offset: unset; cursor: auto;">
-                    <p>Implementação de processos padronizados que garantam qualidade consistente e controle efetivo de recursos.</p>
+                    <h1>PROCEDIMENTO DE GESTÃO E MELHORIA CONTÍNUA&nbsp;</h1><h2>1. OBJETIVO</h2><p>Estabelecer um método padronizado para identificar problemas, planejar ações, executar melhorias, verificar resultados e promover a melhoria contínua dos processos organizacionais.</p><h2>2. CONCEITO</h2><p>O <strong>PDCA</strong> é uma metodologia de gestão amplamente utilizada para controle e melhoria de processos.&nbsp;</p><p>A sigla deriva do inglês <strong>Plan, Do, Check, Act</strong>, representando um ciclo contínuo de aperfeiçoamento.</p><p>O método PDCA tem como finalidade garantir que os processos sejam planejados, executados de forma controlada, avaliados com base em dados e continuamente aprimorados.</p><h2>3. ABRANGÊNCIA</h2><p>Este procedimento aplica-se a todos os processos da organização, incluindo áreas operacionais, administrativas, comerciais, logísticas, de qualidade, atendimento e gestão de pessoas.</p><h2>4. DEFINIÇÕES DAS ETAPAS DO PDCA</h2><h3>4.1 PLAN – PLANEJAR</h3><p>Nesta etapa são identificados os problemas, oportunidades de melhoria ou metas a serem alcançadas.</p><p>Atividades principais:</p><ul data-spread="false"><li><p>Identificação clara do problema ou objetivo</p></li><li><p>Levantamento e análise das causas</p></li><li><p>Definição de metas mensuráveis</p></li><li><p>Elaboração do plano de ação, contendo responsáveis, prazos e recursos necessários</p></li></ul><p>Resultado esperado:
+Plano estruturado e documentado para execução.</p><div style="outline: none; outline-offset: unset; cursor: auto;"><hr></div><h3>4.2 DO – EXECUTAR</h3><p>Consiste na implementação do plano de ação conforme definido na etapa de planejamento.</p><p>Atividades principais:</p><ul data-spread="false"><li><p>Execução das ações planejadas</p></li><li><p>Treinamento e orientação das equipes envolvidas</p></li><li><p>Registro das atividades realizadas</p></li></ul><p>Resultado esperado:
+Plano executado conforme o previsto, com evidências registradas.</p><div style="outline: none; outline-offset: unset; cursor: auto;"><hr></div><h3>4.3 CHECK – VERIFICAR</h3><p>Nesta etapa é realizada a análise dos resultados obtidos após a execução.</p><p>Atividades principais:</p><ul data-spread="false"><li><p>Coleta de dados e indicadores</p></li><li><p>Comparação dos resultados com as metas estabelecidas</p></li><li><p>Identificação de desvios, falhas ou melhorias alcançadas</p></li></ul><p>Resultado esperado:
+Avaliação objetiva da eficácia das ações executadas.</p><div style="outline: none; outline-offset: unset; cursor: auto;"><hr></div><h3>4.4 ACT – AGIR / AJUSTAR</h3><p>Etapa destinada à tomada de decisão com base nos resultados avaliados.</p><p>Atividades principais:</p><ul data-spread="false"><li><p>Padronização das práticas que apresentaram bons resultados</p></li><li><p>Correção de falhas identificadas</p></li><li><p>Ajustes no plano de ação, quando necessário</p></li><li><p>Reinício do ciclo PDCA para novas melhorias</p></li></ul><p>Resultado esperado:
+Processos padronizados, ajustados e em melhoria contínua.</p><h2>5. BENEFÍCIOS DO PDCA</h2><ul data-spread="false"><li><p>Organização e padronização dos processos</p></li><li><p>Redução de erros e desperdícios</p></li><li><p>Melhoria contínua dos resultados</p></li><li><p>Apoio à tomada de decisão baseada em dados</p></li><li><p>Maior eficiência operacional</p></li></ul>
                 </div>
                 
                 <h3 class="editable" id="phase3Pop" style="outline: none; outline-offset: unset; cursor: auto;">Manual de Procedimentos Operacionais Padrão (POP)</h3>
@@ -1126,31 +1132,31 @@
                         <h4>🛠️ Protocolo de Manutenção</h4>
                         <p>10 etapas padronizadas</p>
                         <p>Peças substituídas registradas</p>
-                        <p>Tempo médio controlado: 1,5h</p>
+                        <p>Tempo médio controlado: 2 a 3hrs</p>
                     </div>
                     
                     <div class="card editable" id="card3Form" style="outline: none; outline-offset: unset; cursor: auto;">
                         <h4>📄 Formulário de Diagnóstico</h4>
                         <p>Modelo único para todos técnicos</p>
-                        <p>Orçamento padronizado</p>
-                        <p>Aprovação do cliente obrigatória</p>
+                        <p>Controle de material</p>
+                        <p><br></p>
                     </div>
                 </div>
                 
                 <h3 class="editable" id="phase3Systems" style="outline: none; outline-offset: unset; cursor: auto;">Sistema de Gestão (Low-Cost)</h3>
                 <div class="grid">
                     <div class="card editable" id="card3Google" style="outline: none; outline-offset: unset; cursor: auto;">
-                        <h4>💻 Google Workspace</h4>
-                        <p><strong>Custo:</strong> R$ 28/usuário/mês</p>
-                        <p><strong>Inclui:</strong> Agenda compartilhada, Drive, Formulários</p>
-                        <p><strong>Vantagem:</strong> Acesso remoto, colaboração</p>
+                        <h4>💻 Sistema LimaAr</h4>
+                        <p><strong>Custo:</strong> R$ ~~</p>
+                        <p><strong>Inclui:</strong> Estudos do recursos existentes para ampliar visão de gestão.&nbsp;</p>
+                        <p><strong>Vantagem:</strong>&nbsp;<span style="font-size: 16.8px;">Custo atrelado a plataforma já contratada.</span></p>
                     </div>
                     
                     <div class="card editable" id="card3App" style="outline: none; outline-offset: unset; cursor: auto;">
-                        <h4>📱 App de Campo Gratuito</h4>
-                        <p><strong>Solução:</strong> Typeform + Google Sheets</p>
-                        <p><strong>Função:</strong> Checklists digitais, registro de serviços</p>
-                        <p><strong>Vantagem:</strong> Sem custo de desenvolvimento</p>
+                        <h4>📱 App de Campo</h4>
+                        <p><strong>Solução:</strong>&nbsp;Google Sheets ou app novo</p>
+                        <p><strong>Função:</strong> Checklists e relatórios digitais, registro de serviços para controle de materiais, gestão de veículos.</p>
+                        <p><strong>Vantagem:</strong>&nbsp;Baixo custo de desenvolvimento</p>
                     </div>
                     
                     <div class="card editable" id="card3Whatsapp" style="outline: none; outline-offset: unset; cursor: auto;">
@@ -1164,23 +1170,23 @@
                 <h3 class="editable" id="phase3Control" style="outline: none; outline-offset: unset; cursor: auto;">Controle de Recursos</h3>
                 <div class="kpi-grid">
                     <div class="kpi-card editable" id="kpi1" style="outline: none; outline-offset: unset; cursor: auto;">
-                        <div class="kpi-value">R$ 2.500</div>
+                        <div class="kpi-value">R$ ~~</div>
                         <div class="kpi-desc">Investimento por kit técnico padronizado</div>
                     </div>
                     
                     <div class="kpi-card editable" id="kpi2" style="outline: none; outline-offset: unset; cursor: auto;">
-                        <div class="kpi-value">85%</div>
-                        <div class="kpi-desc">Meta de horas produtivas (vs. 65% atual)</div>
+                        <div class="kpi-value">80%</div>
+                        <div class="kpi-desc">Meta de horas produtivas mês&nbsp; &nbsp; &nbsp; (20% reciclagens, absenteísmo)</div>
                     </div>
                     
                     <div class="kpi-card editable" id="kpi3" style="outline: none; outline-offset: unset; cursor: auto;">
                         <div class="kpi-value">15%</div>
-                        <div class="kpi-desc">Redução esperada no custo por serviço</div>
+                        <div class="kpi-desc">Redução esperada no custo</div>
                     </div>
                     
                     <div class="kpi-card editable" id="kpi4" style="outline: none; outline-offset: unset; cursor: auto;">
                         <div class="kpi-value">24h</div>
-                        <div class="kpi-desc">Tempo máximo para faturamento após serviço</div>
+                        <div class="kpi-desc">Tempo máximo de espera</div>
                     </div>
                 </div>
             </div>
@@ -1203,7 +1209,7 @@
                                 <li>Definição dos novos papéis e responsabilidades</li>
                                 <li>Criação dos checklists básicos de operação</li>
                                 <li>Organização física do estoque e ferramentas</li>
-                                <li>Configuração inicial do Google Workspace</li>
+                                <li>Configuração inicial das plataformas</li>
                             </ul>
                         </div>
                     </div>
@@ -1255,15 +1261,15 @@
                 <div class="grid">
                     <div class="card editable" id="card4Phase12" style="outline: none; outline-offset: unset; cursor: auto;">
                         <h4>👥 Fase 1 e 2</h4>
-                        <p><strong>Liderança:</strong> Sócio Administrativo</p>
-                        <p><strong>Apoio:</strong> Sócio Operacional</p>
-                        <p><strong>Envolvidos:</strong> Toda equipe</p>
+                        <p><strong>Liderança:</strong> Diretor</p>
+                        <p><strong>Apoio:</strong> Supervisor Operacional e Supervisor Técnico Sênior</p>
+                        <p><br></p>
                     </div>
                     
                     <div class="card editable" id="card4Phase34" style="outline: none; outline-offset: unset; cursor: auto;">
                         <h4>👥 Fase 3 e 4</h4>
-                        <p><strong>Liderança:</strong> Sócio Operacional</p>
-                        <p><strong>Apoio:</strong> Líder Técnico Sênior</p>
+                        <p><strong>Liderança:</strong> Diretor e&nbsp;<span style="font-size: 16.8px;">Supervisor Técnico Sênior</span></p>
+                        <p><strong>Apoio:</strong> Supervisor Operacional</p>
                         <p><strong>Envolvidos:</strong> Equipes técnicas</p>
                     </div>
                 </div>
@@ -1271,10 +1277,10 @@
             
             <!-- Fase 5: Resultados -->
             <div id="resultados" class="phase-content">
-                <h2 class="editable" id="phase5Title" style="outline: none; outline-offset: unset; cursor: auto;">Resultados Esperados e ROI</h2>
+                <h2 class="editable" id="phase5Title" style="outline: none; outline-offset: unset; cursor: auto;">Resultados Esperados&nbsp;</h2>
                 
                 <div class="highlight editable" id="phase5Highlight" style="outline: none; outline-offset: unset; cursor: auto;">
-                    <p>Investimento modesto com retorno rápido e impacto significativo na eficiência e lucratividade.</p>
+                    <p><br></p>
                 </div>
                 
                 <h3 class="editable" id="phase5KPIs" style="outline: none; outline-offset: unset; cursor: auto;">Indicadores de Performance (KPIs)</h3>
@@ -1292,33 +1298,33 @@
                             <tbody>
                                 <tr>
                                     <td>Serviços/dia/técnico</td>
-                                    <td>3,1</td>
-                                    <td>4,0</td>
-                                    <td>+29% de produtividade</td>
+                                    <td><br></td>
+                                    <td><br></td>
+                                    <td>+30% de produtividade</td>
                                 </tr>
                                 <tr>
                                     <td>Tempo médio por serviço</td>
-                                    <td>2,8h</td>
-                                    <td>2,2h</td>
-                                    <td>-21% no tempo</td>
+                                    <td><br></td>
+                                    <td><br></td>
+                                    <td>-20% no tempo</td>
                                 </tr>
                                 <tr>
                                     <td>Satisfação do cliente</td>
-                                    <td>4,1 (estimado)</td>
-                                    <td>4,5+</td>
+                                    <td>implantar indicadores</td>
+                                    <td>Analisar indicadores</td>
                                     <td>Mais indicações e fidelização</td>
                                 </tr>
                                 <tr>
-                                    <td>Custo por serviço</td>
-                                    <td>100% (base)</td>
-                                    <td>85%</td>
-                                    <td>+15% na margem</td>
+                                    <td>Ferramental/Materiais</td>
+                                    <td>implantar indicadores</td>
+                                    <td>Analisar indicadores</td>
+                                    <td>redução significativa</td>
                                 </tr>
                                 <tr>
-                                    <td>Reclamações</td>
-                                    <td>5% (estimado)</td>
-                                    <td>≤ 2%</td>
-                                    <td>-60% em retrabalho</td>
+                                    <td>Retrabalhos</td>
+                                    <td><span style="background-color: rgb(240, 244, 255);">implantar indicadores</span></td>
+                                    <td>Analisar indicadores</td>
+                                    <td>redução significativa</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1329,29 +1335,27 @@
                 <div class="grid">
                     <div class="card editable" id="card5Budget" style="outline: none; outline-offset: unset; cursor: auto;">
                         <h4>📊 Orçamento do Projeto</h4>
-                        <p><strong>Reorganização (tempo):</strong> 60h dos sócios</p>
-                        <p><strong>Kits técnicos (6x):</strong> R$ 15.000 (uma vez)</p>
-                        <p><strong>Sistemas (anual):</strong> R$ 1.000</p>
-                        <p><strong>Treinamento:</strong> R$ 2.000</p>
-                        <p><strong style="color: #1a3a8f; font-size: 1.2rem;">TOTAL: R$ 18.000</strong></p>
+                        <p><strong>Reorganização (tempo):</strong>&nbsp;</p>
+                        <p><strong>Sistemas (anual):</strong> R$&nbsp;</p>
+                        <p><strong>Treinamento:</strong> R$&nbsp;</p>
+                        <p><strong style="color: #1a3a8f; font-size: 1.2rem;">TOTAL: R$&nbsp;</strong></p>
                     </div>
                     
                     <div class="card editable" id="card5Return" style="outline: none; outline-offset: unset; cursor: auto;">
                         <h4>📈 Retorno Esperado (anual)</h4>
-                        <p><strong>Aumento produtividade:</strong> +R$ 72.000</p>
-                        <p><strong>Redução custos:</strong> +R$ 54.000</p>
-                        <p><strong>Aumento fidelização:</strong> +R$ 36.000</p>
-                        <p><strong>Redução retrabalho:</strong> +R$ 18.000</p>
-                        <p><strong style="color: #1a3a8f; font-size: 1.2rem;">RETORNO TOTAL: R$ 180.000/ano</strong></p>
+                        <p><strong>Aumento produtividade:</strong> +R$&nbsp;</p>
+                        <p><strong>Redução custos:</strong> +R$&nbsp;</p>
+                        <p><strong>Aumento fidelização:</strong> +R$&nbsp;</p>
+                        <p><strong>Redução retrabalho:</strong> +R$&nbsp;</p>
+                        <p><strong style="color: #1a3a8f; font-size: 1.2rem;">RETORNO TOTAL: R$&nbsp;</strong></p>
                     </div>
                 </div>
                 
                 <div class="highlight editable" id="phase5ROI" style="outline: none; outline-offset: unset; cursor: auto;">
-                    <h4>🎯 ROI (Retorno sobre Investimento)</h4>
-                    <p><strong>Investimento:</strong> R$ 18.000</p>
-                    <p><strong>Retorno Anual:</strong> R$ 180.000</p>
-                    <p><strong>ROI:</strong> 900% no primeiro ano</p>
-                    <p><strong>Payback:</strong> 1,2 meses (aproximadamente 36 dias)</p>
+                    <h4>🎯&nbsp;</h4>
+                    <p><strong>Investimento:</strong> R$&nbsp;</p>
+                    <p><strong>Retorno Anual:</strong> R$&nbsp;</p>
+                    <p><br></p>
                 </div>
                 
                 <h3 class="editable" id="phase5Risks" style="outline: none; outline-offset: unset; cursor: auto;">Riscos e Mitigações</h3>
@@ -1360,7 +1364,7 @@
                         <h4>⚠️ Resistência à Mudança</h4>
                         <p><strong>Probabilidade:</strong> Alta</p>
                         <p><strong>Impacto:</strong> Médio</p>
-                        <p><strong>Mitigação:</strong> Comunicação clara, envolvimento da equipe, incentivos</p>
+                        <p><strong>Mitigação:</strong> Comunicação clara, envolvimento dos gestores com a equipe, reuniões matinais</p>
                     </div>
                     
                     <div class="card editable" id="card5Risk2" style="outline: none; outline-offset: unset; cursor: auto;">
@@ -1374,15 +1378,15 @@
                         <h4>⚠️ Custos Iniciais</h4>
                         <p><strong>Probabilidade:</strong> Baixa</p>
                         <p><strong>Impacto:</strong> Baixo</p>
-                        <p><strong>Mitigação:</strong> Uso de ferramentas gratuitas, priorização</p>
+                        <p><strong>Mitigação:</strong> Uso de ferramentas gratuitas, priorização dos recursos</p>
                     </div>
                 </div>
             </div>
         </div>
         
         <div class="phase-indicator">
-            <div class="phase-dot active" data-phase="diagnostico"></div>
-            <div class="phase-dot" data-phase="estrutura"></div>
+            <div class="phase-dot" data-phase="diagnostico"></div>
+            <div class="phase-dot active" data-phase="estrutura"></div>
             <div class="phase-dot" data-phase="padronizacao"></div>
             <div class="phase-dot" data-phase="implementacao"></div>
             <div class="phase-dot" data-phase="resultados"></div>
@@ -2296,4 +2300,5 @@
         
         <button class="toolbar-close-btn" onclick="closeTextEditorToolbar()">Fechar Editor</button>
     </div>
+
 </body></html>
